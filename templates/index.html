@@ -2,13 +2,79 @@
 <html>
 <head>
     <title>Text to Speech</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c34;
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #3c3f46;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #2e3238;
+            color: white;
+        }
+        input[type="submit"] {
+            background-color: #61dafb;
+            color: #282c34;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #21a1f1;
+        }
+        audio {
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Text to Speech</h1>
-    <form method="POST" action="/convert">
-        <textarea name="text" rows="10" cols="50"></textarea>
-        <br>
-        <input type="submit" value="Convert">
-    </form>
+    <div class="container">
+        <h1>Text to Speech</h1>
+        <form method="POST" action="/convert">
+            <textarea name="text" rows="10" cols="50" placeholder="Enter text here..."></textarea>
+            <br>
+            <input type="submit" value="Convert">
+        </form>
+        <audio id="audio" controls>
+            <source id="audioSource" src="" type="audio/mpeg">
+        </audio>
+    </div>
+    <script>
+        document.querySelector('form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/convert', {
+                method: 'POST',
+                body: formData
+            });
+            const audio = document.getElementById('audio');
+            const audioSource = document.getElementById('audioSource');
+            audioSource.src = await response.text();
+            audio.load();
+            audio.play();
+        };
+    </script>
 </body>
 </html>
