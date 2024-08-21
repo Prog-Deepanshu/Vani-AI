@@ -7,6 +7,7 @@ import time
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
